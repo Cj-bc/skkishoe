@@ -24,9 +24,9 @@ paths:
                 items:
                   $ref: "#/components/schemas/candidate"
                   
-            text/*:
-              schema:
-                type: string
+#             text/*:
+#               schema:
+#                 type: string
 components:
   schemas:
     candidate:
