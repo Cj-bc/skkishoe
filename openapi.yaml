@@ -10,7 +10,7 @@ paths:
         required: true
         schema:
           type: string
-          minimum: 1
+          minLength: 1
     get:
       summary: Returns candidates for specified midashi
       responses:
