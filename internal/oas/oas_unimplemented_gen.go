@@ -18,6 +18,6 @@ var _ Handler = UnimplementedHandler{}
 // Returns candidates for specified midashi.
 //
 // GET /candidates
-func (UnimplementedHandler) CandidatesGet(ctx context.Context, params CandidatesGetParams) (r []Candidate, _ error) {
+func (UnimplementedHandler) CandidatesGet(ctx context.Context, params CandidatesGetParams) (r CandidatesGetRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

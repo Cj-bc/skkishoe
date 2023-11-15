@@ -3,6 +3,7 @@
 package oas
 
 import (
+	"bytes"
 	"io"
 	"mime"
 	"net/http"
@@ -10,11 +11,12 @@ import (
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 
+	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeCandidatesGetResponse(resp *http.Response) (res []Candidate, _ error) {
+func decodeCandidatesGetResponse(resp *http.Response) (res CandidatesGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -30,17 +32,9 @@ func decodeCandidatesGetResponse(resp *http.Response) (res []Candidate, _ error)
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response []Candidate
+			var response CandidatesGetOKApplicationJSON
 			if err := func() error {
-				response = make([]Candidate, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem Candidate
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					response = append(response, elem)
-					return nil
-				}); err != nil {
+				if err := response.Decode(d); err != nil {
 					return err
 				}
 				if err := d.Skip(); err != io.EOF {
@@ -55,7 +49,16 @@ func decodeCandidatesGetResponse(resp *http.Response) (res []Candidate, _ error)
 				}
 				return res, err
 			}
-			return response, nil
+			return &response, nil
+		case ht.MatchContentType("text/*", ct):
+			reader := resp.Body
+			b, err := io.ReadAll(reader)
+			if err != nil {
+				return res, err
+			}
+
+			response := CandidatesGetOKText{Data: bytes.NewReader(b)}
+			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
 		}

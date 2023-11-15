@@ -71,7 +71,7 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		return
 	}
 
-	var response []Candidate
+	var response CandidatesGetRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -91,7 +91,7 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		type (
 			Request  = struct{}
 			Params   = CandidatesGetParams
-			Response = []Candidate
+			Response = CandidatesGetRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

@@ -2,6 +2,10 @@
 
 package oas
 
+import (
+	"io"
+)
+
 // Ref: #/components/schemas/candidate
 type Candidate struct {
 	Candidate  OptString `json:"candidate"`
@@ -27,6 +31,26 @@ func (s *Candidate) SetCandidate(val OptString) {
 func (s *Candidate) SetAnnotation(val OptString) {
 	s.Annotation = val
 }
+
+type CandidatesGetOKApplicationJSON []Candidate
+
+func (*CandidatesGetOKApplicationJSON) candidatesGetRes() {}
+
+type CandidatesGetOKText struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s CandidatesGetOKText) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*CandidatesGetOKText) candidatesGetRes() {}
 
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {

@@ -13,7 +13,7 @@ type Handler interface {
 	// Returns candidates for specified midashi.
 	//
 	// GET /candidates
-	CandidatesGet(ctx context.Context, params CandidatesGetParams) ([]Candidate, error)
+	CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

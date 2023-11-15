@@ -27,7 +27,7 @@ type Invoker interface {
 	// Returns candidates for specified midashi.
 	//
 	// GET /candidates
-	CandidatesGet(ctx context.Context, params CandidatesGetParams) ([]Candidate, error)
+	CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error)
 }
 
 // Client implements OAS client.
@@ -83,12 +83,12 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 // Returns candidates for specified midashi.
 //
 // GET /candidates
-func (c *Client) CandidatesGet(ctx context.Context, params CandidatesGetParams) ([]Candidate, error) {
+func (c *Client) CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error) {
 	res, err := c.sendCandidatesGet(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetParams) (res []Candidate, err error) {
+func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetParams) (res CandidatesGetRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPMethodKey.String("GET"),
 		semconv.HTTPRouteKey.String("/candidates"),
