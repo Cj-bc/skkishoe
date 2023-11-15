@@ -3,31 +3,25 @@ package main
 import (
 	"log"
 	"net/http"
+	"github.com/mattn/go-skkdic"
+	"os"
 
 	oas "github.com/Cj-bc/skkishoe/internal/oas"
 )
 
 func main() {
-	tmp := map[string][]oas.Candidate {
-		"おむすび": {
-			{
-				Candidate: oas.NewOptString("御掬"),
-				Annotation: oas.NewOptString("VTuber 御掬この子"),
-			},
-		},
-		"きょう": {
-			{
-				Candidate: oas.NewOptString("今日"),
-				Annotation: oas.OptString{},
-			},
-			{
-				Candidate: oas.NewOptString("京"),
-				Annotation: oas.OptString{},
-			},
-		},
+	f, err := os.Open("/usr/share/skk/SKK-JISYO.L.utf-8")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	service := CandidatesService{tmp}
+	dict := skkdic.New()
+	err = dict.Load(f)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	service := CandidatesService{dict}
 
 	srv, err := oas.NewServer(service)
 	if err != nil {
