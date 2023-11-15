@@ -31,6 +31,8 @@ components:
   schemas:
     candidate:
       type: object
+      required:
+        - candidate
       properties:
         candidate:
           type: string

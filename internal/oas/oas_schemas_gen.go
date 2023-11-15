@@ -8,12 +8,12 @@ import (
 
 // Ref: #/components/schemas/candidate
 type Candidate struct {
-	Candidate  OptString `json:"candidate"`
+	Candidate  string    `json:"candidate"`
 	Annotation OptString `json:"annotation"`
 }
 
 // GetCandidate returns the value of Candidate.
-func (s *Candidate) GetCandidate() OptString {
+func (s *Candidate) GetCandidate() string {
 	return s.Candidate
 }
 
@@ -23,7 +23,7 @@ func (s *Candidate) GetAnnotation() OptString {
 }
 
 // SetCandidate sets the value of Candidate.
-func (s *Candidate) SetCandidate(val OptString) {
+func (s *Candidate) SetCandidate(val string) {
 	s.Candidate = val
 }
 
