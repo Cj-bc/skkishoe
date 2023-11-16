@@ -19,7 +19,7 @@ func entryToCandidates(e skkdic.Entry) []oas.Candidate {
 	candidates := []oas.Candidate{}
 	for _, w := range e.Words {
 		candidates = append(candidates, oas.Candidate{
-			Candidate: oas.NewOptString(w.Text),
+			Candidate: w.Text,
 			Annotation: oas.NewOptString(w.Desc)})
 	}
 	return candidates
