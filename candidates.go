@@ -15,11 +15,11 @@ type CandidatesService struct {
 
 // Construct result for 'text/*' Mime types
 func TextResult(cs []oas.Candidate) *oas.CandidatesGetOKText {
-	result := ""
+	result := []string{}
 	for _, c := range cs {
-		result += c.Candidate + "/"
+		result = append(result, c.Candidate)
 	}
-	reader := strings.NewReader(result)
+	reader := strings.NewReader(strings.Join(result, "/"))
 	res := oas.CandidatesGetOKText{Data: reader}
 	return &res
 }
