@@ -7,6 +7,14 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 [[http://openlab.ring.gr.jp/skk/skkserv-ja.html][skkserv]]をご存知の方は、その亜種です。
 漢字に変換したい平仮名を渡すと、登録されている辞書の中からそれに対応する候補を返します。
 
+** 特徴
++ UTF-8ベース
+  + 現在の環境で扱いやすく
++ RESTFul API
+  + 現在の技術スタックで扱いやすく
++ 明確な仕様
+  + OpenAPI v3.1.0で定義、他実装・クライアントコードの生成をより容易に
+
 ** 使用方法
 
 #+begin_src sh
@@ -17,11 +25,6 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
   $ curl -H 'Content-Type: application/json' http://localhost:8080/candidates?midashi=かw
   [{"candidate": "変", "annotation": "(変化)色が変わる"}, {"candidate": "代", "annotation": "(代理)代わりに出席する"}]
 #+end_src
-
-** 変更点
-+ EUC-JPではなくUTF-8をベースに
-+ RESTFul API
-+ OpenAPI v3.1.0で定義
 
 ** 目指さないもの
 + 既存のSKK実装との互換性の確保
