@@ -5,9 +5,17 @@ import (
 	"net/http"
 	"github.com/mattn/go-skkdic"
 	"os"
+	"github.com/ogen-go/ogen/middleware"
+	"context"
 
 	oas "github.com/Cj-bc/skkishoe/internal/oas"
 )
+
+// Insert raw *http.Request pointer to context
+func StoreRawRequestMiddleware(req middleware.Request, next middleware.Next) (middleware.Response, error) {
+	req.SetContext(context.WithValue(req.Context, "rawRequest", req.Raw))
+	return next(req)
+}
 
 func main() {
 	f, err := os.Open("/usr/share/skk/SKK-JISYO.L.utf-8")
@@ -23,7 +31,7 @@ func main() {
 
 	service := CandidatesService{dict}
 
-	srv, err := oas.NewServer(service)
+	srv, err := oas.NewServer(service, oas.WithMiddleware(StoreRawRequestMiddleware))
 	if err != nil {
 		log.Fatal(err)
 	}
