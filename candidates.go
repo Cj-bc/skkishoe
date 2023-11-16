@@ -4,10 +4,24 @@ import (
 	"context"
 	oas "github.com/Cj-bc/skkishoe/internal/oas"
 	"github.com/mattn/go-skkdic"
+	"net/http"
+	"strings"
 )
 
 type CandidatesService struct {
 	dict *skkdic.Dict
+}
+
+
+// Construct result for 'text/*' Mime types
+func TextResult(cs []oas.Candidate) *oas.CandidatesGetOKText {
+	result := ""
+	for _, c := range cs {
+		result += c.Candidate + "/"
+	}
+	reader := strings.NewReader(result)
+	res := oas.CandidatesGetOKText{Data: reader}
+	return &res
 }
 
 func isAlphabet(r rune) bool {
@@ -25,7 +39,7 @@ func entryToCandidates(e skkdic.Entry) []oas.Candidate {
 	return candidates
 }
 
-func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.CandidatesGetParams) ([]oas.Candidate, error) {
+func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.CandidatesGetParams) (oas.CandidatesGetRes, error) {
 	entries := []skkdic.Entry{}
 	rs := []rune(args.Midashi)
 	if isAlphabet(rs[len(rs)-1]) {
@@ -40,5 +54,14 @@ func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.Candidate
 			result = append(result, c)
 		}
 	}
-	return result, nil
+
+	req, _ := ctx.Value("rawRequest").(*http.Request)
+
+	switch req.Header.Get("Content-Type") {
+	case "application/json":
+		res := oas.CandidatesGetOKApplicationJSON(result)
+		return &res, nil
+	default:
+		return TextResult(result), nil
+	}
 }
