@@ -58,9 +58,17 @@ func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.Candidate
 		}
 	}
 
-	req, _ := ctx.Value("rawRequest").(*http.Request)
+	// If program could not retrive http.Request from context,
+	// Assume that contentType is text/plain
+	//
+	// TODO: What's best?
+	var contentType string = "text/plain"
+	req, ok := ctx.Value("rawRequest").(*http.Request)
+	if ok {
+		contentType = req.Header.Get("Content-Type")
+	}
 
-	switch req.Header.Get("Content-Type") {
+	switch contentType {
 	case "application/json":
 		res := oas.CandidatesGetOKApplicationJSON(result)
 		return &res, nil
