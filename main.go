@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
-	"github.com/mattn/go-skkdic"
 	"os"
+
+	"github.com/mattn/go-skkdic"
 	"github.com/ogen-go/ogen/middleware"
-	"context"
 
 	oas "github.com/Cj-bc/skkishoe/internal/oas"
 )

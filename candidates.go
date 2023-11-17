@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	oas "github.com/Cj-bc/skkishoe/internal/oas"
-	"github.com/mattn/go-skkdic"
 	"net/http"
 	"strings"
+
+	oas "github.com/Cj-bc/skkishoe/internal/oas"
+	"github.com/mattn/go-skkdic"
 )
 
 type CandidatesService struct {
