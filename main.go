@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/mattn/go-skkdic"
 	"github.com/ogen-go/ogen/middleware"
@@ -18,14 +20,50 @@ func StoreRawRequestMiddleware(req middleware.Request, next middleware.Next) (mi
 	return next(req)
 }
 
-func main() {
-	f, err := os.Open("/usr/share/skk/SKK-JISYO.L.utf-8")
-	if err != nil {
-		log.Fatal(err)
+type dicts struct {
+	dicts []string
+}
+
+func (d dicts) String() string {
+	return strings.Join(d.dicts, ",")
+}
+
+func (d *dicts) Set(value string) error {
+	for _, path := range strings.Split(value, ",") {
+		f, err := os.Open(path)
+		defer f.Close()
+		if err != nil {
+			return err
+		}
+		d.dicts = append(d.dicts, path)
 	}
+	return nil
+}
+
+var (
+	flag_dicts dicts
+)
+
+func init() {
+	flag.Var(&flag_dicts, "dict", "Dictionaries to use. Must be a Valid file path")
+}
+
+func main() {
+	flag.Parse()
 
 	dict := skkdic.New()
-	err = dict.Load(f)
+	var err error
+	if len(flag_dicts.dicts) > 0 {
+		f, err := os.Open(flag_dicts.dicts[0])
+		defer f.Close()
+		if err != nil {
+			log.Fatalf("Coul'd not open specified dictionary %s: %w", flag_dicts.dicts[0], err)
+		}
+
+		err = dict.Load(f)
+	} else {
+		log.Fatal("You need to specify Dictionary to use. Aborting...")
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
