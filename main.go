@@ -54,13 +54,15 @@ func main() {
 	dict := skkdic.New()
 	var err error
 	if len(flag_dicts.dicts) > 0 {
-		f, err := os.Open(flag_dicts.dicts[0])
-		defer f.Close()
-		if err != nil {
-			log.Fatalf("Coul'd not open specified dictionary %s: %w", flag_dicts.dicts[0], err)
-		}
+		for _, d := range flag_dicts.dicts {
+			f, err := os.Open(d)
+			defer f.Close()
+			if err != nil {
+				log.Fatalf("Coul'd not open specified dictionary %s: %w", d, err)
+			}
 
-		err = dict.Load(f)
+			err = dict.Load(f)
+		}
 	} else {
 		log.Fatal("You need to specify Dictionary to use. Aborting...")
 	}
