@@ -16,6 +16,17 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
   + OpenAPI v3.1.0で定義、他実装・クライアントコードの生成をより容易に
 
 ** 使用方法
+*** サーバーの起動
+変換に使用する辞書を ~--dict~ フラグで指定します。複数の辞書を指定する
+には ~--dict~ を複数渡すか、コロン区切りで指定します。
+
+#+begin_src sh
+  $ go run . --dict <YOUR_DICTIONARY>:<SECOND_DICTIONARY>:<THIRD_>...
+#+end_src
+
+*** APIを使用する
+~/candidates~ に、 ~midashi~ クエリを付けてGETリクエストを飛ばすと変換
+候補が返ってきます。
 
 #+begin_src sh
   $ curl http://localhost:8080/candidates?midashi=かw
