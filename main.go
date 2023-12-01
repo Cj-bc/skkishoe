@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -49,6 +50,8 @@ func init() {
 }
 
 func main() {
+	port := flag.Int("port", 8080, "server port number")
+
 	flag.Parse()
 
 	dict := skkdic.New()
@@ -77,5 +80,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Fatal(http.ListenAndServe("localhost:8080", srv))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%d", port), srv))
 }
