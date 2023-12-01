@@ -25,11 +25,11 @@ type dicts struct {
 }
 
 func (d dicts) String() string {
-	return strings.Join(d.dicts, ",")
+	return strings.Join(d.dicts, ":")
 }
 
 func (d *dicts) Set(value string) error {
-	for _, path := range strings.Split(value, ",") {
+	for _, path := range strings.Split(value, ":") {
 		f, err := os.Open(path)
 		defer f.Close()
 		if err != nil {
@@ -45,7 +45,7 @@ var (
 )
 
 func init() {
-	flag.Var(&flag_dicts, "dict", "Dictionaries to use. Must be a Valid file path")
+	flag.Var(&flag_dicts, "dict", "Dictionaries to use. Must be a Valid file path joined by `:'\ne.g. foo/bar.dict:bar/baz.dict")
 }
 
 func main() {
