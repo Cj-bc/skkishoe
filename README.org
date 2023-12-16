@@ -17,11 +17,11 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 
 ** 使用方法
 *** サーバーの起動
-変換に使用する辞書を ~--dict~ フラグで指定します。複数の辞書を指定する
-には ~--dict~ を複数渡すか、コロン区切りで指定します。
+変換に使用する辞書を ~-dict~ フラグで指定します。複数の辞書を指定する
+には ~-dict~ を複数渡すか、コロン区切りで指定します。
 
 #+begin_src sh
-  $ go run . --dict <YOUR_DICTIONARY>:<SECOND_DICTIONARY>:<THIRD_>...
+  $ go run . -dict <YOUR_DICTIONARY>:<SECOND_DICTIONARY>:<THIRD_>...
 #+end_src
 
 *** APIを使用する
@@ -30,8 +30,7 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 
 #+begin_src sh
   $ curl http://localhost:8080/candidates?midashi=かw
-  変/代/交/替/買/換/飼/變/支
-  (変化)色が変わる/(代理)代わりに出席する/挨拶を交わす/世代が替わる////「変」の旧字/ささえる
+  変;(変化)色が変わる/代;(代理)代わりに出席する/交;挨拶を交わす/替;世代が替わる/買;/換;/飼;/變;「変」の旧字/支;ささえる
 
   $ curl -H 'Content-Type: application/json' http://localhost:8080/candidates?midashi=かw
   [{"candidate": "変", "annotation": "(変化)色が変わる"}, {"candidate": "代", "annotation": "(代理)代わりに出席する"}]
