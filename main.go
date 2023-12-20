@@ -61,7 +61,7 @@ func main() {
 			f, err := os.Open(d)
 			defer f.Close()
 			if err != nil {
-				log.Fatalf("Coul'd not open specified dictionary %s: %w", d, err)
+				log.Fatalf("Coul'd not open specified dictionary %s: %v", d, err)
 			}
 
 			err = dict.Load(f)
