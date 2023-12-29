@@ -65,8 +65,11 @@ func main() {
 				slog.Warn("Failed to open dictionary", "dictionary", d, "error", err)
 			}
 
-			err = dict.Load(f)
-			slog.Info(fmt.Sprintf("dictionary loaded: %s", d))
+			if err = dict.Load(f); err != nil {
+				slog.Warn("Get error while reading dictionary file", "dictionary", d, "error", err)
+			} else {
+				slog.Info(fmt.Sprintf("dictionary loaded: %s", d))
+			}
 		}
 	} else {
 		slog.Error("At least one dictionary should be supplied")
