@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 	"strings"
 
@@ -41,6 +42,8 @@ func entryToCandidates(e skkdic.Entry) []oas.Candidate {
 }
 
 func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.CandidatesGetParams) (oas.CandidatesGetRes, error) {
+	slog.Info("GET", "path", "/candidates", "midashi", args.Midashi)
+
 	entries := []skkdic.Entry{}
 	rs := []rune(args.Midashi)
 	if isAlphabet(rs[len(rs)-1]) {

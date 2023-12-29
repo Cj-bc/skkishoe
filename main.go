@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"strings"
@@ -54,6 +54,7 @@ func main() {
 
 	flag.Parse()
 
+	slog.Info("Setting up dictionaries", "dictionaries", flag_dicts.dicts)
 	dict := skkdic.New()
 	var err error
 	if len(flag_dicts.dicts) > 0 {
@@ -61,24 +62,33 @@ func main() {
 			f, err := os.Open(d)
 			defer f.Close()
 			if err != nil {
-				log.Fatalf("Coul'd not open specified dictionary %s: %v", d, err)
+				slog.Warn("Failed to open dictionary", "dictionary", d, "error", err)
 			}
 
 			err = dict.Load(f)
+			slog.Info(fmt.Sprintf("dictionary loaded: %s", d))
 		}
 	} else {
-		log.Fatal("You need to specify Dictionary to use. Aborting...")
+		slog.Error("At least one dictionary should be supplied")
+		os.Exit(1)
 	}
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Unknown error occured", "error", err.Error())
+		os.Exit(1)
 	}
 
 	service := CandidatesService{dict}
 
+	slog.Info("Setting up Server")
 	srv, err := oas.NewServer(service, oas.WithMiddleware(StoreRawRequestMiddleware))
 	if err != nil {
-		log.Fatal(err)
+		slog.Error("Unknown error occured", "error", err.Error())
+		os.Exit(1)
 	}
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), srv))
+	slog.Info("Server is ready. Start listening", "port", *port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", *port), srv); err != nil {
+		slog.Error("Unknown error occured", "error", err.Error())
+	}
+	os.Exit(1)
 }
