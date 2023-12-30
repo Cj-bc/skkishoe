@@ -26,7 +26,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/candidate"
                   
-            text/*:
+            text/plain:
               schema:
                 description: |
                   SKK辞書のエントリーと似た書式をしています。
