@@ -14,6 +14,8 @@ paths:
     get:
       summary: Returns candidates for specified midashi
       responses:
+        default:
+          description: failed to execute API call
         "200":
           description: List of corresponding candidates are returned.
           content:
