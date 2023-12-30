@@ -17,11 +17,11 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 
 ** 使用方法
 *** サーバーの起動
-変換に使用する辞書を ~-dict~ フラグで指定します。複数の辞書を指定する
-には ~-dict~ を複数渡すか、コロン区切りで指定します。
+変換に使用する辞書を引数で渡します。複数の辞書を渡すと、その全ての結果
+をまとめて返します。
 
 #+begin_src sh
-  $ go run . -dict <YOUR_DICTIONARY>:<SECOND_DICTIONARY>:<THIRD_>...
+  $ go run . <YOUR_DICTIONARY> <SECOND_DICTIONARY> ...
 #+end_src
 
 *** APIを使用する
