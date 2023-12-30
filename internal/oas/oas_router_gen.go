@@ -40,6 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
+	args := [1]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -48,18 +49,25 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/candidates"
-			if l := len("/candidates"); len(elem) >= l && elem[0:l] == "/candidates" {
+		case '/': // Prefix: "/midashis/"
+			if l := len("/midashis/"); len(elem) >= l && elem[0:l] == "/midashis/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
+			// Param: "midashi"
+			// Leaf parameter
+			args[0] = elem
+			elem = ""
+
 			if len(elem) == 0 {
 				// Leaf node.
 				switch r.Method {
 				case "GET":
-					s.handleCandidatesGetRequest([0]string{}, elemIsEscaped, w, r)
+					s.handleMidashisMidashiGetRequest([1]string{
+						args[0],
+					}, elemIsEscaped, w, r)
 				default:
 					s.notAllowed(w, r, "GET")
 				}
@@ -78,7 +86,7 @@ type Route struct {
 	operationID string
 	pathPattern string
 	count       int
-	args        [0]string
+	args        [1]string
 }
 
 // Name returns ogen operation name.
@@ -146,23 +154,28 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/candidates"
-			if l := len("/candidates"); len(elem) >= l && elem[0:l] == "/candidates" {
+		case '/': // Prefix: "/midashis/"
+			if l := len("/midashis/"); len(elem) >= l && elem[0:l] == "/midashis/" {
 				elem = elem[l:]
 			} else {
 				break
 			}
 
+			// Param: "midashi"
+			// Leaf parameter
+			args[0] = elem
+			elem = ""
+
 			if len(elem) == 0 {
 				switch method {
 				case "GET":
-					// Leaf: CandidatesGet
-					r.name = "CandidatesGet"
+					// Leaf: MidashisMidashiGet
+					r.name = "MidashisMidashiGet"
 					r.summary = "Returns candidates for specified midashi"
 					r.operationID = ""
-					r.pathPattern = "/candidates"
+					r.pathPattern = "/midashis/{midashi}"
 					r.args = args
-					r.count = 0
+					r.count = 1
 					return r, true
 				default:
 					return

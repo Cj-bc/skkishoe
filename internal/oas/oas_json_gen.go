@@ -125,8 +125,8 @@ func (s *Candidate) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes CandidatesGetOKApplicationJSON as json.
-func (s CandidatesGetOKApplicationJSON) Encode(e *jx.Encoder) {
+// Encode encodes MidashisMidashiGetOKApplicationJSON as json.
+func (s MidashisMidashiGetOKApplicationJSON) Encode(e *jx.Encoder) {
 	unwrapped := []Candidate(s)
 
 	e.ArrStart()
@@ -136,10 +136,10 @@ func (s CandidatesGetOKApplicationJSON) Encode(e *jx.Encoder) {
 	e.ArrEnd()
 }
 
-// Decode decodes CandidatesGetOKApplicationJSON from json.
-func (s *CandidatesGetOKApplicationJSON) Decode(d *jx.Decoder) error {
+// Decode decodes MidashisMidashiGetOKApplicationJSON from json.
+func (s *MidashisMidashiGetOKApplicationJSON) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode CandidatesGetOKApplicationJSON to nil")
+		return errors.New("invalid: unable to decode MidashisMidashiGetOKApplicationJSON to nil")
 	}
 	var unwrapped []Candidate
 	if err := func() error {
@@ -158,19 +158,19 @@ func (s *CandidatesGetOKApplicationJSON) Decode(d *jx.Decoder) error {
 	}(); err != nil {
 		return errors.Wrap(err, "alias")
 	}
-	*s = CandidatesGetOKApplicationJSON(unwrapped)
+	*s = MidashisMidashiGetOKApplicationJSON(unwrapped)
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s CandidatesGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s MidashisMidashiGetOKApplicationJSON) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *CandidatesGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *MidashisMidashiGetOKApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

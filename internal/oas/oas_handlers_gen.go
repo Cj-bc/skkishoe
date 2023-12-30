@@ -19,19 +19,19 @@ import (
 	"github.com/ogen-go/ogen/ogenerrors"
 )
 
-// handleCandidatesGetRequest handles GET /candidates operation.
+// handleMidashisMidashiGetRequest handles GET /midashis/{midashi} operation.
 //
 // Returns candidates for specified midashi.
 //
-// GET /candidates
-func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// GET /midashis/{midashi}
+func (s *Server) handleMidashisMidashiGetRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/candidates"),
+		semconv.HTTPRouteKey.String("/midashis/{midashi}"),
 	}
 
 	// Start a span for this request.
-	ctx, span := s.cfg.Tracer.Start(r.Context(), "CandidatesGet",
+	ctx, span := s.cfg.Tracer.Start(r.Context(), "MidashisMidashiGet",
 		trace.WithAttributes(otelAttrs...),
 		serverSpanKind,
 	)
@@ -56,11 +56,11 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		}
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "CandidatesGet",
+			Name: "MidashisMidashiGet",
 			ID:   "",
 		}
 	)
-	params, err := decodeCandidatesGetParams(args, argsEscaped, r)
+	params, err := decodeMidashisMidashiGetParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
 			OperationContext: opErrContext,
@@ -71,18 +71,18 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		return
 	}
 
-	var response CandidatesGetRes
+	var response MidashisMidashiGetRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "CandidatesGet",
+			OperationName:    "MidashisMidashiGet",
 			OperationSummary: "Returns candidates for specified midashi",
 			OperationID:      "",
 			Body:             nil,
 			Params: middleware.Parameters{
 				{
 					Name: "midashi",
-					In:   "query",
+					In:   "path",
 				}: params.Midashi,
 			},
 			Raw: r,
@@ -90,8 +90,8 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 
 		type (
 			Request  = struct{}
-			Params   = CandidatesGetParams
-			Response = CandidatesGetRes
+			Params   = MidashisMidashiGetParams
+			Response = MidashisMidashiGetRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -100,14 +100,14 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		](
 			m,
 			mreq,
-			unpackCandidatesGetParams,
+			unpackMidashisMidashiGetParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.CandidatesGet(ctx, params)
+				response, err = s.h.MidashisMidashiGet(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.CandidatesGet(ctx, params)
+		response, err = s.h.MidashisMidashiGet(ctx, params)
 	}
 	if err != nil {
 		recordError("Internal", err)
@@ -115,7 +115,7 @@ func (s *Server) handleCandidatesGetRequest(args [0]string, argsEscaped bool, w 
 		return
 	}
 
-	if err := encodeCandidatesGetResponse(response, w, span); err != nil {
+	if err := encodeMidashisMidashiGetResponse(response, w, span); err != nil {
 		recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)

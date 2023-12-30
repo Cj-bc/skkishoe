@@ -32,25 +32,55 @@ func (s *Candidate) SetAnnotation(val OptString) {
 	s.Annotation = val
 }
 
-type CandidatesGetOKApplicationJSON []Candidate
+type MidashisMidashiGetOKApplicationJSON []Candidate
 
-func (*CandidatesGetOKApplicationJSON) candidatesGetRes() {}
+func (*MidashisMidashiGetOKApplicationJSON) midashisMidashiGetRes() {}
 
-type CandidatesGetOKText struct {
+// SKK辞書のエントリーと似た書式をしています。
+// 各エントリはスラッシュ区切りとなっており、最初と最後にはスラッシュが存在しません。
+// 各エントリは「候補」部と「アノーテーション」部から成っており、セミコロンによって区切られます。
+// アノーテーションがない場合でもセミコロンは存在しています。.
+type MidashisMidashiGetOKText struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s CandidatesGetOKText) Read(p []byte) (n int, err error) {
+func (s MidashisMidashiGetOKText) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*CandidatesGetOKText) candidatesGetRes() {}
+// MidashisMidashiGetOKTextHeaders wraps MidashisMidashiGetOKText with response headers.
+type MidashisMidashiGetOKTextHeaders struct {
+	ContentType string
+	Response    MidashisMidashiGetOKText
+}
+
+// GetContentType returns the value of ContentType.
+func (s *MidashisMidashiGetOKTextHeaders) GetContentType() string {
+	return s.ContentType
+}
+
+// GetResponse returns the value of Response.
+func (s *MidashisMidashiGetOKTextHeaders) GetResponse() MidashisMidashiGetOKText {
+	return s.Response
+}
+
+// SetContentType sets the value of ContentType.
+func (s *MidashisMidashiGetOKTextHeaders) SetContentType(val string) {
+	s.ContentType = val
+}
+
+// SetResponse sets the value of Response.
+func (s *MidashisMidashiGetOKTextHeaders) SetResponse(val MidashisMidashiGetOKText) {
+	s.Response = val
+}
+
+func (*MidashisMidashiGetOKTextHeaders) midashisMidashiGetRes() {}
 
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {

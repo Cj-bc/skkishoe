@@ -8,7 +8,7 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-func (s CandidatesGetOKApplicationJSON) Validate() error {
+func (s MidashisMidashiGetOKApplicationJSON) Validate() error {
 	alias := ([]Candidate)(s)
 	if alias == nil {
 		return errors.New("nil is invalid value")

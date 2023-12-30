@@ -8,12 +8,12 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// CandidatesGet implements GET /candidates operation.
+	// MidashisMidashiGet implements GET /midashis/{midashi} operation.
 	//
 	// Returns candidates for specified midashi.
 	//
-	// GET /candidates
-	CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error)
+	// GET /midashis/{midashi}
+	MidashisMidashiGet(ctx context.Context, params MidashisMidashiGetParams) (MidashisMidashiGetRes, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and
