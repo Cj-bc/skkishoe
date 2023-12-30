@@ -45,6 +45,17 @@ var (
 	flag_dicts dicts
 )
 
+
+func usage() {
+	fmt.Fprintf(os.Stderr, `skkishoe usage:
+  skkishoe DICTIONARY... # Start skkishoe server using DICTIONARY
+
+Flags:
+`)
+	flag.PrintDefaults()
+	os.Exit(0)
+}
+
 func init() {
 	flag.Var(&flag_dicts, "dict", "Dictionaries to use. Must be a Valid file path joined by `:'\ne.g. foo/bar.dict:bar/baz.dict")
 }
@@ -54,11 +65,11 @@ func main() {
 
 	flag.Parse()
 
-	slog.Info("Setting up dictionaries", "dictionaries", flag_dicts.dicts)
+	slog.Info("Setting up dictionaries", "dictionaries", flag.Args())
 	dict := skkdic.New()
 	var err error
-	if len(flag_dicts.dicts) > 0 {
-		for _, d := range flag_dicts.dicts {
+	if flag.NArg() > 0 {
+		for _, d := range flag.Args() {
 			f, err := os.Open(d)
 			defer f.Close()
 			if err != nil {
@@ -72,8 +83,7 @@ func main() {
 			}
 		}
 	} else {
-		slog.Error("At least one dictionary should be supplied")
-		os.Exit(1)
+		usage()
 	}
 	if err != nil {
 		slog.Error("Unknown error occured", "error", err.Error())
