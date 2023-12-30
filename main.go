@@ -23,7 +23,7 @@ func StoreRawRequestMiddleware(req middleware.Request, next middleware.Next) (mi
 
 func usage() {
 	fmt.Fprintf(os.Stderr, `skkishoe usage:
-  skkishoe DICTIONARY... # Start skkishoe server using DICTIONARY
+  skkishoe [FLAGS] DICTIONARY... # Start skkishoe server using DICTIONARY
 
 Flags:
 `)
