@@ -32,6 +32,23 @@ func (s *Candidate) SetAnnotation(val OptString) {
 	s.Annotation = val
 }
 
+// MidashisMidashiGetDef is default response for MidashisMidashiGet operation.
+type MidashisMidashiGetDef struct {
+	StatusCode int
+}
+
+// GetStatusCode returns the value of StatusCode.
+func (s *MidashisMidashiGetDef) GetStatusCode() int {
+	return s.StatusCode
+}
+
+// SetStatusCode sets the value of StatusCode.
+func (s *MidashisMidashiGetDef) SetStatusCode(val int) {
+	s.StatusCode = val
+}
+
+func (*MidashisMidashiGetDef) midashisMidashiGetRes() {}
+
 type MidashisMidashiGetOKApplicationJSON []Candidate
 
 func (*MidashisMidashiGetOKApplicationJSON) midashisMidashiGetRes() {}
@@ -40,47 +57,21 @@ func (*MidashisMidashiGetOKApplicationJSON) midashisMidashiGetRes() {}
 // 各エントリはスラッシュ区切りとなっており、最初と最後にはスラッシュが存在しません。
 // 各エントリは「候補」部と「アノーテーション」部から成っており、セミコロンによって区切られます。
 // アノーテーションがない場合でもセミコロンは存在しています。.
-type MidashisMidashiGetOKText struct {
+type MidashisMidashiGetOKTextPlain struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s MidashisMidashiGetOKText) Read(p []byte) (n int, err error) {
+func (s MidashisMidashiGetOKTextPlain) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-// MidashisMidashiGetOKTextHeaders wraps MidashisMidashiGetOKText with response headers.
-type MidashisMidashiGetOKTextHeaders struct {
-	ContentType string
-	Response    MidashisMidashiGetOKText
-}
-
-// GetContentType returns the value of ContentType.
-func (s *MidashisMidashiGetOKTextHeaders) GetContentType() string {
-	return s.ContentType
-}
-
-// GetResponse returns the value of Response.
-func (s *MidashisMidashiGetOKTextHeaders) GetResponse() MidashisMidashiGetOKText {
-	return s.Response
-}
-
-// SetContentType sets the value of ContentType.
-func (s *MidashisMidashiGetOKTextHeaders) SetContentType(val string) {
-	s.ContentType = val
-}
-
-// SetResponse sets the value of Response.
-func (s *MidashisMidashiGetOKTextHeaders) SetResponse(val MidashisMidashiGetOKText) {
-	s.Response = val
-}
-
-func (*MidashisMidashiGetOKTextHeaders) midashisMidashiGetRes() {}
+func (*MidashisMidashiGetOKTextPlain) midashisMidashiGetRes() {}
 
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
