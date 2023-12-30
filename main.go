@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/mattn/go-skkdic"
 	"github.com/ogen-go/ogen/middleware"
@@ -21,30 +20,6 @@ func StoreRawRequestMiddleware(req middleware.Request, next middleware.Next) (mi
 	return next(req)
 }
 
-type dicts struct {
-	dicts []string
-}
-
-func (d dicts) String() string {
-	return strings.Join(d.dicts, ":")
-}
-
-func (d *dicts) Set(value string) error {
-	for _, path := range strings.Split(value, ":") {
-		f, err := os.Open(path)
-		defer f.Close()
-		if err != nil {
-			return err
-		}
-		d.dicts = append(d.dicts, path)
-	}
-	return nil
-}
-
-var (
-	flag_dicts dicts
-)
-
 
 func usage() {
 	fmt.Fprintf(os.Stderr, `skkishoe usage:
@@ -54,10 +29,6 @@ Flags:
 `)
 	flag.PrintDefaults()
 	os.Exit(0)
-}
-
-func init() {
-	flag.Var(&flag_dicts, "dict", "Dictionaries to use. Must be a Valid file path joined by `:'\ne.g. foo/bar.dict:bar/baz.dict")
 }
 
 func main() {
