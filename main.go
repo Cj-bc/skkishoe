@@ -64,27 +64,27 @@ func main() {
 	port := flag.Int("port", 8080, "server port number")
 
 	flag.Parse()
+	if flag.NArg() <= 0 {
+		usage()
+	}
 
 	slog.Info("Setting up dictionaries", "dictionaries", flag.Args())
 	dict := skkdic.New()
 	var err error
-	if flag.NArg() > 0 {
-		for _, d := range flag.Args() {
-			f, err := os.Open(d)
-			defer f.Close()
-			if err != nil {
-				slog.Warn("Failed to open dictionary", "dictionary", d, "error", err)
-			}
-
-			if err = dict.Load(f); err != nil {
-				slog.Warn("Get error while reading dictionary file", "dictionary", d, "error", err)
-			} else {
-				slog.Info(fmt.Sprintf("dictionary loaded: %s", d))
-			}
+	for _, d := range flag.Args() {
+		f, err := os.Open(d)
+		defer f.Close()
+		if err != nil {
+			slog.Warn("Failed to open dictionary", "dictionary", d, "error", err)
 		}
-	} else {
-		usage()
+
+		if err = dict.Load(f); err != nil {
+			slog.Warn("Get error while reading dictionary file", "dictionary", d, "error", err)
+		} else {
+			slog.Info(fmt.Sprintf("dictionary loaded: %s", d))
+		}
 	}
+
 	if err != nil {
 		slog.Error("Unknown error occured", "error", err.Error())
 		os.Exit(1)
