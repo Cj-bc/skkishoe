@@ -1,12 +1,12 @@
 openapi: 3.1.0
 info:
   title: SKki shoe server API
-  version: 0.0.1
+  version: 0.0.2
 paths:
-  /candidates:
+  /midashis/{midashi}:
     parameters:
       - name: midashi
-        in: query
+        in: path
         required: true
         schema:
           type: string
