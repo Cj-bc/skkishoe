@@ -17,16 +17,16 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 
 ** 使用方法
 *** サーバーの起動
-変換に使用する辞書を引数で渡します。複数の辞書を渡すと、その全ての結果
-をまとめて返します。
+変換に使用する辞書を引数で渡します。複数の辞書を渡すと、その全ての辞書
+を使うようになります。
 
 #+begin_src sh
   $ go run . <YOUR_DICTIONARY> <SECOND_DICTIONARY> ...
 #+end_src
 
 *** APIを使用する
-~/candidates~ に、 ~midashi~ クエリを付けてGETリクエストを飛ばすと変換
-候補が返ってきます。
+~/midashis/<みだし>~ にGETリクエストを飛ばすと、 ~<みだし>~ に対しての
+変換候補が返ってきます。
 
 #+begin_src sh
   $ curl http://localhost:8080/midashi/かw
