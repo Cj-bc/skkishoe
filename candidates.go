@@ -10,7 +10,7 @@ import (
 	"github.com/mattn/go-skkdic"
 )
 
-type CandidatesService struct {
+type MidashiService struct {
 	dict *skkdic.Dict
 }
 
@@ -42,7 +42,7 @@ func entryToCandidates(e skkdic.Entry) []oas.Candidate {
 }
 
 func (s MidashiService) MidashisMidashiGet(ctx context.Context, args oas.MidashisMidashiGetParams) (oas.MidashisMidashiGetRes, error) {
-	slog.Info("GET", "path", "/candidates", "midashi", args.Midashi)
+	slog.Info("GET", "path", fmt.Sprintf("/midashi/%s", args.Midashi))
 
 	entries := []skkdic.Entry{}
 	rs := []rune(args.Midashi)
