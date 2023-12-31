@@ -16,13 +16,13 @@ type CandidatesService struct {
 
 
 // Construct result for 'text/*' Mime types
-func TextResult(cs []oas.Candidate) *oas.CandidatesGetOKText {
+func TextResult(cs []oas.Candidate) *oas.MidashisMidashiGetOKTextPlain {
 	cands := []string{}
 	for _, c := range cs {
 		cands = append(cands, c.Candidate + ";" + c.Annotation.Or(""))
 	}
 	reader := strings.NewReader(strings.Join(cands, "/"))
-	res := oas.CandidatesGetOKText{Data: reader}
+	res := oas.MidashisMidashiGetOKTextPlain{Data: reader}
 	return &res
 }
 
@@ -41,7 +41,7 @@ func entryToCandidates(e skkdic.Entry) []oas.Candidate {
 	return candidates
 }
 
-func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.CandidatesGetParams) (oas.CandidatesGetRes, error) {
+func (s MidashiService) MidashisMidashiGet(ctx context.Context, args oas.MidashisMidashiGetParams) (oas.MidashisMidashiGetRes, error) {
 	slog.Info("GET", "path", "/candidates", "midashi", args.Midashi)
 
 	entries := []skkdic.Entry{}
@@ -71,7 +71,7 @@ func (s CandidatesService) CandidatesGet(ctx context.Context, args oas.Candidate
 
 	switch contentType {
 	case "application/json":
-		res := oas.CandidatesGetOKApplicationJSON(result)
+		res := oas.MidashisMidashiGetOKApplicationJSON(result)
 		return &res, nil
 	default:
 		return TextResult(result), nil
