@@ -4,6 +4,7 @@ package oas
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/go-faster/errors"
 
@@ -14,34 +15,42 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-// CandidatesGetParams is parameters of GET /candidates operation.
-type CandidatesGetParams struct {
+// MidashisMidashiGetParams is parameters of GET /midashis/{midashi} operation.
+type MidashisMidashiGetParams struct {
 	Midashi string
 }
 
-func unpackCandidatesGetParams(packed middleware.Parameters) (params CandidatesGetParams) {
+func unpackMidashisMidashiGetParams(packed middleware.Parameters) (params MidashisMidashiGetParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "midashi",
-			In:   "query",
+			In:   "path",
 		}
 		params.Midashi = packed[key].(string)
 	}
 	return params
 }
 
-func decodeCandidatesGetParams(args [0]string, argsEscaped bool, r *http.Request) (params CandidatesGetParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode query: midashi.
+func decodeMidashisMidashiGetParams(args [1]string, argsEscaped bool, r *http.Request) (params MidashisMidashiGetParams, _ error) {
+	// Decode path: midashi.
 	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "midashi",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
 		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "midashi",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
 
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+			if err := func() error {
 				val, err := d.DecodeValue()
 				if err != nil {
 					return err
@@ -54,7 +63,7 @@ func decodeCandidatesGetParams(args [0]string, argsEscaped bool, r *http.Request
 
 				params.Midashi = c
 				return nil
-			}); err != nil {
+			}(); err != nil {
 				return err
 			}
 			if err := func() error {
@@ -80,7 +89,7 @@ func decodeCandidatesGetParams(args [0]string, argsEscaped bool, r *http.Request
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "midashi",
-			In:   "query",
+			In:   "path",
 			Err:  err,
 		}
 	}

@@ -11,12 +11,11 @@ import (
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
 
-	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/ogenerrors"
 	"github.com/ogen-go/ogen/validate"
 )
 
-func decodeCandidatesGetResponse(resp *http.Response) (res CandidatesGetRes, _ error) {
+func decodeMidashisMidashiGetResponse(resp *http.Response) (res MidashisMidashiGetRes, _ error) {
 	switch resp.StatusCode {
 	case 200:
 		// Code 200.
@@ -32,7 +31,7 @@ func decodeCandidatesGetResponse(resp *http.Response) (res CandidatesGetRes, _ e
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response CandidatesGetOKApplicationJSON
+			var response MidashisMidashiGetOKApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -49,19 +48,37 @@ func decodeCandidatesGetResponse(resp *http.Response) (res CandidatesGetRes, _ e
 				}
 				return res, err
 			}
+			// Validate response.
+			if err := func() error {
+				if err := response.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return res, errors.Wrap(err, "validate")
+			}
 			return &response, nil
-		case ht.MatchContentType("text/*", ct):
+		case ct == "text/plain":
 			reader := resp.Body
 			b, err := io.ReadAll(reader)
 			if err != nil {
 				return res, err
 			}
 
-			response := CandidatesGetOKText{Data: bytes.NewReader(b)}
+			response := MidashisMidashiGetOKTextPlain{Data: bytes.NewReader(b)}
 			return &response, nil
 		default:
 			return res, validate.InvalidContentType(ct)
 		}
 	}
-	return res, validate.UnexpectedStatusCode(resp.StatusCode)
+	// Default response.
+	res, err := func() (res MidashisMidashiGetRes, err error) {
+		return &MidashisMidashiGetDef{
+			StatusCode: resp.StatusCode,
+		}, nil
+	}()
+	if err != nil {
+		return res, errors.Wrapf(err, "default (code %d)", resp.StatusCode)
+	}
+	return res, nil
 }

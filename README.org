@@ -29,10 +29,10 @@ UTF-8環境向けのSKK"ぽい"入力手法用の辞書サーバーのような�
 候補が返ってきます。
 
 #+begin_src sh
-  $ curl http://localhost:8080/candidates?midashi=かw
+  $ curl http://localhost:8080/midashi/かw
   変;(変化)色が変わる/代;(代理)代わりに出席する/交;挨拶を交わす/替;世代が替わる/買;/換;/飼;/變;「変」の旧字/支;ささえる
 
-  $ curl -H 'Content-Type: application/json' http://localhost:8080/candidates?midashi=かw
+  $ curl -H 'Content-Type: application/json' http://localhost:8080/midashi/かw
   [{"candidate": "変", "annotation": "(変化)色が変わる"}, {"candidate": "代", "annotation": "(代理)代わりに出席する"}]
 #+end_src
 

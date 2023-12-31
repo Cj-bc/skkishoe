@@ -1,12 +1,12 @@
 openapi: 3.1.0
 info:
   title: SKki shoe server API
-  version: 0.0.1
+  version: 0.0.2
 paths:
-  /candidates:
+  /midashis/{midashi}:
     parameters:
       - name: midashi
-        in: query
+        in: path
         required: true
         schema:
           type: string
@@ -14,6 +14,8 @@ paths:
     get:
       summary: Returns candidates for specified midashi
       responses:
+        default:
+          description: failed to execute API call
         "200":
           description: List of corresponding candidates are returned.
           content:
@@ -24,7 +26,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/candidate"
                   
-            text/*:
+            text/plain:
               schema:
                 description: |
                   SKK辞書のエントリーと似た書式をしています。

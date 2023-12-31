@@ -61,7 +61,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	service := CandidatesService{dict}
+	service := MidashiService{dict}
 
 	slog.Info("Setting up Server")
 	srv, err := oas.NewServer(service, oas.WithMiddleware(StoreRawRequestMiddleware))

@@ -22,12 +22,12 @@ import (
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
-	// CandidatesGet invokes GET /candidates operation.
+	// MidashisMidashiGet invokes GET /midashis/{midashi} operation.
 	//
 	// Returns candidates for specified midashi.
 	//
-	// GET /candidates
-	CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error)
+	// GET /midashis/{midashi}
+	MidashisMidashiGet(ctx context.Context, params MidashisMidashiGetParams) (MidashisMidashiGetRes, error)
 }
 
 // Client implements OAS client.
@@ -78,20 +78,20 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 	return u
 }
 
-// CandidatesGet invokes GET /candidates operation.
+// MidashisMidashiGet invokes GET /midashis/{midashi} operation.
 //
 // Returns candidates for specified midashi.
 //
-// GET /candidates
-func (c *Client) CandidatesGet(ctx context.Context, params CandidatesGetParams) (CandidatesGetRes, error) {
-	res, err := c.sendCandidatesGet(ctx, params)
+// GET /midashis/{midashi}
+func (c *Client) MidashisMidashiGet(ctx context.Context, params MidashisMidashiGetParams) (MidashisMidashiGetRes, error) {
+	res, err := c.sendMidashisMidashiGet(ctx, params)
 	return res, err
 }
 
-func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetParams) (res CandidatesGetRes, err error) {
+func (c *Client) sendMidashisMidashiGet(ctx context.Context, params MidashisMidashiGetParams) (res MidashisMidashiGetRes, err error) {
 	otelAttrs := []attribute.KeyValue{
 		semconv.HTTPMethodKey.String("GET"),
-		semconv.HTTPRouteKey.String("/candidates"),
+		semconv.HTTPRouteKey.String("/midashis/{midashi}"),
 	}
 
 	// Run stopwatch.
@@ -106,7 +106,7 @@ func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetPara
 	c.requests.Add(ctx, 1, metric.WithAttributes(otelAttrs...))
 
 	// Start a span for this request.
-	ctx, span := c.cfg.Tracer.Start(ctx, "CandidatesGet",
+	ctx, span := c.cfg.Tracer.Start(ctx, "MidashisMidashiGet",
 		trace.WithAttributes(otelAttrs...),
 		clientSpanKind,
 	)
@@ -123,27 +123,27 @@ func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetPara
 
 	stage = "BuildURL"
 	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/candidates"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	stage = "EncodeQueryParams"
-	q := uri.NewQueryEncoder()
+	var pathParts [2]string
+	pathParts[0] = "/midashis/"
 	{
 		// Encode "midashi" parameter.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "midashi",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "midashi",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
 			return e.EncodeValue(conv.StringToString(params.Midashi))
-		}); err != nil {
-			return res, errors.Wrap(err, "encode query")
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
 		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
 	}
-	u.RawQuery = q.Values().Encode()
+	uri.AddPathParts(u, pathParts[:]...)
 
 	stage = "EncodeRequest"
 	r, err := ht.NewRequest(ctx, "GET", u)
@@ -159,7 +159,7 @@ func (c *Client) sendCandidatesGet(ctx context.Context, params CandidatesGetPara
 	defer resp.Body.Close()
 
 	stage = "DecodeResponse"
-	result, err := decodeCandidatesGetResponse(resp)
+	result, err := decodeMidashisMidashiGetResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

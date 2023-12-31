@@ -32,25 +32,46 @@ func (s *Candidate) SetAnnotation(val OptString) {
 	s.Annotation = val
 }
 
-type CandidatesGetOKApplicationJSON []Candidate
+// MidashisMidashiGetDef is default response for MidashisMidashiGet operation.
+type MidashisMidashiGetDef struct {
+	StatusCode int
+}
 
-func (*CandidatesGetOKApplicationJSON) candidatesGetRes() {}
+// GetStatusCode returns the value of StatusCode.
+func (s *MidashisMidashiGetDef) GetStatusCode() int {
+	return s.StatusCode
+}
 
-type CandidatesGetOKText struct {
+// SetStatusCode sets the value of StatusCode.
+func (s *MidashisMidashiGetDef) SetStatusCode(val int) {
+	s.StatusCode = val
+}
+
+func (*MidashisMidashiGetDef) midashisMidashiGetRes() {}
+
+type MidashisMidashiGetOKApplicationJSON []Candidate
+
+func (*MidashisMidashiGetOKApplicationJSON) midashisMidashiGetRes() {}
+
+// SKK辞書のエントリーと似た書式をしています。
+// 各エントリはスラッシュ区切りとなっており、最初と最後にはスラッシュが存在しません。
+// 各エントリは「候補」部と「アノーテーション」部から成っており、セミコロンによって区切られます。
+// アノーテーションがない場合でもセミコロンは存在しています。.
+type MidashisMidashiGetOKTextPlain struct {
 	Data io.Reader
 }
 
 // Read reads data from the Data reader.
 //
 // Kept to satisfy the io.Reader interface.
-func (s CandidatesGetOKText) Read(p []byte) (n int, err error) {
+func (s MidashisMidashiGetOKTextPlain) Read(p []byte) (n int, err error) {
 	if s.Data == nil {
 		return 0, io.EOF
 	}
 	return s.Data.Read(p)
 }
 
-func (*CandidatesGetOKText) candidatesGetRes() {}
+func (*MidashisMidashiGetOKTextPlain) midashisMidashiGetRes() {}
 
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {

@@ -13,11 +13,11 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
-// CandidatesGet implements GET /candidates operation.
+// MidashisMidashiGet implements GET /midashis/{midashi} operation.
 //
 // Returns candidates for specified midashi.
 //
-// GET /candidates
-func (UnimplementedHandler) CandidatesGet(ctx context.Context, params CandidatesGetParams) (r CandidatesGetRes, _ error) {
+// GET /midashis/{midashi}
+func (UnimplementedHandler) MidashisMidashiGet(ctx context.Context, params MidashisMidashiGetParams) (r MidashisMidashiGetRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
